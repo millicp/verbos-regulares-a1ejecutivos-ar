@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>VERBOS REGULARES-presente</title>
+    <style>
+        :root {
+            --primary: #2B6CB0;
+            --primary-dark: #1A365D;
+            --secondary: #4A5568;
+            --bg: #F0F4F8;
+            --card-bg: #FFFFFF;
+            --text: #2D3748;
+            --border: #CBD5E0;
+            --success: #28A745;
+            --error: #DC3545;
+            --card-back-bg: #EBF8FF;
+            --card-back-border: #BEE3F8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 24px 16px;
+            overflow-x: hidden;
+        }
+
+        /* ENCABEZADO CON ESPACIADO AUMENTADO */
+        header {
+            text-align: center;
+            width: 100%;
+            max-width: 480px;
+            margin-bottom: 24px;
+        }
+
+        .subtitle-badge {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 14px;
+            margin-bottom: 16px;
+            letter-spacing: 0.6px;
+        }
+
+        h1 {
+            font-size: 1.25rem;
+            color: var(--primary-dark);
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .nav-tabs {
+            display: flex;
+            width: 100%;
+            max-width: 480px;
+            background: #E2E8F0;
+            border-radius: 8px;
+            padding: 4px;
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 9px 4px;
+            border: none;
+            background: none;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--secondary);
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+
+        .tab-btn.active {
+            background: var(--primary-dark);
+            color: #FFFFFF;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.12);
+        }
+
+        /* CONTENEDOR PRINCIPAL CON DIAGRAMACIÓN SEGÚN BOCETO */
+        .main-card {
+            width: 100%;
+            max-width: 480px;
+            background: var(--card-bg);
+            border: 1.5px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 4px 12px rgba(43, 108, 176, 0.08);
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 380px;
+        }
+
+        .main-card.active {
+            display: flex;
+        }
+
+        .card-header-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.75rem;
+            color: var(--secondary);
+            font-weight: 700;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #EDF2F7;
+        }
+
+        .score-pill {
+            background: #FEFCBF;
+            color: #744210;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+
+        .content-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 16px;
+        }
+
+        /* 1. FLASHCARDS (SIN SUBTÍTULO REDUNDANTE) */
+        .flashcard-scene {
+            width: 100%;
+            height: 180px;
+            perspective: 1000px;
+            cursor: pointer;
+            margin: auto 0;
+        }
+
+        .flashcard {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.4s ease;
+            border-radius: 10px;
+        }
+
+        .flashcard.is-flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: #FAFCFE;
+            border: 1.5px dashed var(--border);
+            border-radius: 10px;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .card-face.back {
+            transform: rotateY(180deg);
+            background: var(--card-back-bg);
+            border: 1.5px solid var(--card-back-border);
+            color: var(--primary-dark);
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary-dark);
+            margin-bottom: 6px;
+        }
+
+        .card-sub {
+            font-size: 0.95rem;
+            color: var(--primary-dark);
+            margin-bottom: 6px;
+            font-weight: 700;
+        }
+
+        .card-desc {
+            font-size: 0.75rem;
+            color: var(--secondary);
+            font-style: italic;
+        }
+
+        .hint-text {
+            font-size: 0.65rem;
+            color: #A0AEC0;
+            margin-top: 8px;
+        }
+
+        /* 2. COMPLETAR (CONJUGACIÓN DIRECTA) */
+        .quiz-question {
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: var(--text);
+            line-height: 1.4;
+            margin-bottom: 14px;
+        }
+
+        .options-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .option-btn {
+            padding: 9px 12px;
+            background: #FFFFFF;
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.8rem;
+            text-align: left;
+            cursor: pointer;
+            color: var(--text);
+            font-weight: 600;
+            transition: all 0.15s ease;
+        }
+
+        .option-btn.correct {
+            background: var(--success) !important;
+            color: white !important;
+            border-color: var(--success) !important;
+        }
+
+        .option-btn.incorrect {
+            background: var(--error) !important;
+            color: white !important;
+            border-color: var(--error) !important;
+        }
+
+        .feedback-msg {
+            font-size: 0.74rem;
+            font-weight: 700;
+            min-height: 20px;
+            margin-top: 4px;
+        }
+
+        .feedback-msg.correct { color: var(--success); }
+        .feedback-msg.incorrect { color: var(--error); }
+
+        /* 3. RELACIONAR (4 BLOQUES DE 3 PARES) */
+        .match-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .match-col {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .match-item {
+            padding: 8px 6px;
+            background: #F7FAFC;
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.74rem;
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .match-item.selected {
+            border-color: var(--primary);
+            background: #EBF8FF;
+            color: var(--primary-dark);
+            font-weight: 800;
+        }
+
+        .match-item.matched {
+            background: #DEF7EC;
+            border-color: #319795;
+            color: #234E52;
+            cursor: default;
+        }
+
+        /* CONTROLES PARALELOS ABAJO (SEGÚN BOCETO) */
+        .controls-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            width: 100%;
+            margin-top: auto;
+            padding-top: 10px;
+        }
+
+        .btn {
+            padding: 10px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-align: center;
+            transition: background 0.15s ease;
+        }
+
+        .btn:disabled {
+            background: #CBD5E0;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .btn:active:not(:disabled) {
+            opacity: 0.85;
+        }
+
+        .footer-note {
+            text-align: center;
+            font-size: 0.65rem;
+            color: #A0AEC0;
+            margin-top: 16px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <span class="subtitle-badge">NIVEL BÁSICO A1 — ENTORNO CORPORATIVO</span>
+        <h1>VERBOS REGULARES-presente</h1>
+    </header>
+
+    <div class="nav-tabs">
+        <button class="tab-btn active" id="btn-tab-fc" onclick="switchTab('flashcards')">1. Flashcards</button>
+        <button class="tab-btn" id="btn-tab-qz" onclick="switchTab('quiz')">2. Completar</button>
+        <button class="tab-btn" id="btn-tab-mt" onclick="switchTab('match')">3. Relacionar</button>
+    </div>
+
+    <!-- SECCIÓN 1: FLASHCARDS -->
+    <div id="flashcards" class="main-card active">
+        <div class="card-header-info">
+            <span id="fc-counter">Tarjeta 1 de 12</span>
+            <span>Verbos de Operación</span>
+        </div>
+        
+        <div class="content-area">
+            <div class="flashcard-scene" onclick="flipCard()">
+                <div class="flashcard" id="card">
+                    <div class="card-face">
+                        <div class="card-title" id="fc-term">gestionar</div>
+                        <div class="card-desc">toca la tarjeta para ver la colocación</div>
+                        <span class="hint-text">↻ presiona para girar</span>
+                    </div>
+                    <div class="card-face back">
+                        <div class="card-sub" id="fc-collab">gestionar el presupuesto anual</div>
+                        <div class="card-desc" id="fc-trans">to manage the annual budget</div>
+                        <span class="hint-text">↻ presiona para volver</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls-grid">
+            <button class="btn" id="fc-prev-btn" onclick="prevCard()">Anterior</button>
+            <button class="btn" id="fc-next-btn" onclick="nextCard()">Siguiente</button>
+        </div>
+    </div>
+
+    <!-- SECCIÓN 2: COMPLETAR -->
+    <div id="quiz" class="main-card">
+        <div class="card-header-info">
+            <span id="qz-counter">Pregunta 1 de 10</span>
+            <span class="score-pill" id="score-display">Puntaje: 0 / 10</span>
+        </div>
+        
+        <div class="content-area">
+            <div style="font-size:0.65rem; font-weight:800; color:var(--primary); margin-bottom:4px; letter-spacing:0.5px;">DECISIÓN EJECUTIVA</div>
+            <div class="quiz-question" id="q-text">Cargando...</div>
+            <div class="options-grid" id="q-options"></div>
+            <div class="feedback-msg" id="q-feedback"></div>
+        </div>
+
+        <div class="controls-grid">
+            <button class="btn" id="qz-prev-btn" onclick="prevQuestion()">Anterior</button>
+            <button class="btn" id="qz-next-btn" onclick="nextQuestion()">Siguiente</button>
+        </div>
+    </div>
+
+    <!-- SECCIÓN 3: RELACIONAR -->
+    <div id="match" class="main-card">
+        <div class="card-header-info">
+            <span id="match-page-info">Bloque 1 de 4 (3 pares)</span>
+            <span class="score-pill" id="match-score">Pares: 0 / 3</span>
+        </div>
+        
+        <div class="content-area">
+            <div class="match-grid">
+                <div class="match-col" id="verbs-col"></div>
+                <div class="match-col" id="complements-col"></div>
+            </div>
+            <div class="feedback-msg" id="match-feedback"></div>
+        </div>
+
+        <div class="controls-grid">
+            <button class="btn" id="mt-prev-btn" onclick="prevMatchBlock()">Anterior</button>
+            <button class="btn" id="mt-next-btn" onclick="nextMatchBlock()">Siguiente</button>
+        </div>
+    </div>
+
+    <div class="footer-note">
+        VERBOS REGULARES-presente • Programa de Inmersión Ejecutiva (A1)
+    </div>
+
+    <script>
+        const cardsData = [
+            { term: "gestionar", collab: "gestionar el presupuesto anual", trans: "to manage the annual budget" },
+            { term: "aceptar", collab: "aceptar las condiciones del contrato", trans: "to accept contract terms" },
+            { term: "conversar", collab: "conversar sobre los objetivos", trans: "to talk about goals" },
+            { term: "preparar", collab: "preparar la presentación directiva", trans: "to prepare the board presentation" },
+            { term: "visitar", collab: "visitar la filial regional", trans: "to visit the regional branch" },
+            { term: "enviar", collab: "enviar un correo al cliente VIP", trans: "to send an email to VIP client" },
+            { term: "esperar", collab: "esperar a los inversionistas", trans: "to wait for the investors" },
+            { term: "llamar", collab: "llamar al proveedor extranjero", trans: "to call the foreign supplier" },
+            { term: "presentar", collab: "presentar el informe financiero", trans: "to present the financial report" },
+            { term: "preguntar", collab: "preguntar por las tarifas", trans: "to ask about rates" },
+            { term: "estudiar", collab: "estudiar el mercado local", trans: "to study the local market" },
+            { term: "terminar", collab: "terminar la auditoría a tiempo", trans: "to finish audit on time" }
+        ];
+
+        let currentCardIndex = 0;
+
+        function flipCard() {
+            document.getElementById('card').classList.toggle('is-flipped');
+        }
+
+        function updateCard() {
+            const cardEl = document.getElementById('card');
+            cardEl.classList.remove('is-flipped');
+            setTimeout(() => {
+                document.getElementById('fc-term').innerText = cardsData[currentCardIndex].term;
+                document.getElementById('fc-collab').innerText = cardsData[currentCardIndex].collab;
+                document.getElementById('fc-trans').innerText = cardsData[currentCardIndex].trans;
+                document.getElementById('fc-counter').innerText = `Tarjeta ${currentCardIndex + 1} de ${cardsData.length}`;
+            }, 100);
+
+            document.getElementById('fc-prev-btn').disabled = (currentCardIndex === 0);
+            document.getElementById('fc-next-btn').disabled = (currentCardIndex === cardsData.length - 1);
+        }
+
+        function nextCard() {
+            if (currentCardIndex < cardsData.length - 1) {
+                currentCardIndex++;
+                updateCard();
+            }
+        }
+
+        function prevCard() {
+            if (currentCardIndex > 0) {
+                currentCardIndex--;
+                updateCard();
+            }
+        }
+
+        const quizData = [
+            {
+                q: "El director comercial ___________ las condiciones del contrato de la firma.",
+                options: ["acepta", "aceptamos", "aceptan"],
+                correct: 0,
+                explain: "¡Correcto! El sujeto ('El director comercial') es tercera persona singular (él: *acepta*)."
+            },
+            {
+                q: "Nosotros ___________ la presentación directiva antes de las diez de la mañana.",
+                options: ["preparas", "preparamos", "preparan"],
+                correct: 1,
+                explain: "¡Correcto! El pronombre 'Nosotros' conjuga con *-amos* (*preparamos*)."
+            },
+            {
+                q: "Ustedes ___________ sobre la estrategia de expansión regional en la sala de juntas.",
+                options: ["conversas", "conversamos", "conversan"],
+                correct: 2,
+                explain: "¡Correcto! El pronombre 'Ustedes' utiliza la terminación *-an* (*conversan*)."
+            },
+            {
+                q: "Yo ___________ a los inversionistas en la oficina principal puntualmente.",
+                options: ["espero", "esperas", "espera"],
+                correct: 0,
+                explain: "¡Correcto! La primera persona singular ('Yo') termina en *-o* (*espero*)."
+            },
+            {
+                q: "El equipo de operaciones ___________ la filial regional cada trimestre.",
+                options: ["visito", "visitas", "visita"],
+                correct: 2,
+                explain: "¡Correcto! 'El equipo' en singular utiliza la forma de tercera persona (*visita*)."
+            },
+            {
+                q: "Tú ___________ el informe financiero ante la junta directiva esta tarde.",
+                options: ["presentas", "presenta", "presentamos"],
+                correct: 0,
+                explain: "¡Correcto! El pronombre 'Tú' lleva la terminación *-as* (*presentas*)."
+            },
+            {
+                q: "Los analistas ___________ el presupuesto anual con los jefes de departamento.",
+                options: ["gestiono", "gestionas", "gestionan"],
+                correct: 2,
+                explain: "¡Correcto! El sujeto plural 'Los analistas' conjuga con *-an* (*gestionan*)."
+            },
+            {
+                q: "Usted ___________ un correo al cliente VIP para confirmar la cita corporativa.",
+                options: ["envías", "envía", "enviamos"],
+                correct: 1,
+                explain: "¡Correcto! El tratamiento 'Usted' comparte la conjugación de él/ella (*envía*)."
+            },
+            {
+                q: "Nosotros ___________ por las tarifas antes de firmar el acuerdo comercial.",
+                options: ["preguntan", "preguntamos", "preguntas"],
+                correct: 1,
+                explain: "¡Correcto! 'Nosotros' utiliza la terminación *-amos* (*preguntamos*)."
+            },
+            {
+                q: "Ellos ___________ la auditoría a tiempo este fin de semana largo.",
+                options: ["termino", "terminas", "terminan"],
+                correct: 2,
+                explain: "¡Correcto! El pronombre 'Ellos' utiliza la terminación *-an* (*terminan*)."
+            }
+        ];
+
+        let currentQuizIndex = 0;
+        let score = 0;
+        let userAnswers = new Array(quizData.length).fill(null);
+
+        function loadQuiz() {
+            const currentQ = quizData[currentQuizIndex];
+            document.getElementById('qz-counter').innerText = `Pregunta ${currentQuizIndex + 1} de ${quizData.length}`;
+            document.getElementById('q-text').innerText = `${currentQuizIndex + 1}. ${currentQ.q}`;
+            
+            const feedbackEl = document.getElementById('q-feedback');
+            feedbackEl.innerText = "";
+            feedbackEl.className = "feedback-msg";
+            
+            const optionsContainer = document.getElementById('q-options');
+            optionsContainer.innerHTML = '';
+
+            const previousAnswer = userAnswers[currentQuizIndex];
+
+            currentQ.options.forEach((opt, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerText = opt;
+                
+                if (previousAnswer !== null) {
+                    btn.disabled = true;
+                    if (index === currentQ.correct) {
+                        btn.classList.add('correct');
+                    }
+                    if (previousAnswer === index && index !== currentQ.correct) {
+                        btn.classList.add('incorrect');
+                    }
+                } else {
+                    btn.onclick = () => selectOption(index, btn, currentQ.correct, currentQ.explain);
+                }
+                
+                optionsContainer.appendChild(btn);
+            });
+
+            if (previousAnswer !== null) {
+                if (previousAnswer === currentQ.correct) {
+                    feedbackEl.innerText = currentQ.explain;
+                    feedbackEl.className = "feedback-msg correct";
+                } else {
+                    feedbackEl.innerText = "Respuesta correcta: " + currentQ.options[currentQ.correct];
+                    feedbackEl.className = "feedback-msg incorrect";
+                }
+            }
+
+            document.getElementById('qz-prev-btn').disabled = (currentQuizIndex === 0);
+            document.getElementById('qz-next-btn').disabled = (currentQuizIndex === quizData.length - 1);
+        }
+
+        function selectOption(selectedIndex, buttonElement, correctIndex, explainText) {
+            userAnswers[currentQuizIndex] = selectedIndex;
+            const buttons = document.querySelectorAll('#q-options .option-btn');
+            buttons.forEach(btn => btn.disabled = true);
+
+            const feedbackEl = document.getElementById('q-feedback');
+
+            if (selectedIndex === correctIndex) {
+                buttonElement.classList.add('correct');
+                score++;
+                feedbackEl.innerText = explainText;
+                feedbackEl.className = "feedback-msg correct";
+            } else {
+                buttonElement.classList.add('incorrect');
+                buttons[correctIndex].classList.add('correct');
+                feedbackEl.innerText = "Respuesta correcta: " + quizData[currentQuizIndex].options[correctIndex];
+                feedbackEl.className = "feedback-msg incorrect";
+            }
+
+            document.getElementById('score-display').innerText = `Puntaje: ${score} / ${quizData.length}`;
+        }
+
+        function nextQuestion() {
+            if (currentQuizIndex < quizData.length - 1) {
+                currentQuizIndex++;
+                loadQuiz();
+            }
+        }
+
+        function prevQuestion() {
+            if (currentQuizIndex > 0) {
+                currentQuizIndex--;
+                loadQuiz();
+            }
+        }
+
+        const allPairs = [...cardsData].map((item, idx) => ({ id: idx + 1, verb: item.term, comp: item.collab.replace(item.term + " ", "") }));
+        let matchBlocks = [];
+        let currentBlockIndex = 0;
+        let selectedVerb = null;
+        let selectedComp = null;
+        let matchedInBlock = 0;
+
+        function prepareMatchBlocks() {
+            matchBlocks = [];
+            for (let i = 0; i < allPairs.length; i += 3) {
+                matchBlocks.push(allPairs.slice(i, i + 3));
+            }
+        }
+
+        function initMatchActivity() {
+            prepareMatchBlocks();
+            currentBlockIndex = 0;
+            loadMatchBlock();
+        }
+
+        function loadMatchBlock() {
+            selectedVerb = null;
+            selectedComp = null;
+            matchedInBlock = 0;
+
+            const blockPairs = matchBlocks[currentBlockIndex];
+            document.getElementById('match-page-info').innerText = `Bloque ${currentBlockIndex + 1} de ${matchBlocks.length} (3 pares)`;
+            document.getElementById('match-score').innerText = `Pares: 0 / ${blockPairs.length}`;
+            document.getElementById('match-feedback').innerText = "";
+
+            const verbsCol = document.getElementById('verbs-col');
+            const compsCol = document.getElementById('complements-col');
+
+            verbsCol.innerHTML = '';
+            compsCol.innerHTML = '';
+
+            const shuffledVerbs = [...blockPairs].sort(() => Math.random() - 0.5);
+            const shuffledComps = [...blockPairs].sort(() => Math.random() - 0.5);
+
+            shuffledVerbs.forEach(pair => {
+                const el = document.createElement('div');
+                el.className = 'match-item';
+                el.innerText = pair.verb;
+                el.dataset.id = pair.id;
+                el.onclick = () => selectMatchItem(el, 'verb');
+                verbsCol.appendChild(el);
+            });
+
+            shuffledComps.forEach(pair => {
+                const el = document.createElement('div');
+                el.className = 'match-item';
+                el.innerText = pair.comp;
+                el.dataset.id = pair.id;
+                el.onclick = () => selectMatchItem(el, 'comp');
+                compsCol.appendChild(el);
+            });
+
+            document.getElementById('mt-prev-btn').disabled = (currentBlockIndex === 0);
+            document.getElementById('mt-next-btn').disabled = (currentBlockIndex === matchBlocks.length - 1);
+        }
+
+        function selectMatchItem(el, type) {
+            if (el.classList.contains('matched')) return;
+
+            if (type === 'verb') {
+                document.querySelectorAll('#verbs-col .match-item').forEach(i => i.classList.remove('selected'));
+                selectedVerb = el;
+                el.classList.add('selected');
+            } else {
+                document.querySelectorAll('#complements-col .match-item').forEach(i => i.classList.remove('selected'));
+                selectedComp = el;
+                el.classList.add('selected');
+            }
+
+            if (selectedVerb && selectedComp) {
+                const blockPairs = matchBlocks[currentBlockIndex];
+                if (selectedVerb.dataset.id === selectedComp.dataset.id) {
+                    selectedVerb.classList.remove('selected');
+                    selectedComp.classList.remove('selected');
+                    selectedVerb.classList.add('matched');
+                    selectedComp.classList.add('matched');
+                    matchedInBlock++;
+                    document.getElementById('match-score').innerText = `Pares: ${matchedInBlock} / ${blockPairs.length}`;
+                    document.getElementById('match-feedback').innerText = "¡Asociación correcta!";
+                    document.getElementById('match-feedback').className = "feedback-msg correct";
+
+                    selectedVerb = null;
+                    selectedComp = null;
+
+                    if (matchedInBlock === blockPairs.length) {
+                        if (currentBlockIndex < matchBlocks.length - 1) {
+                            document.getElementById('match-feedback').innerText = "¡Bloque completado! Presiona 'Siguiente' para continuar.";
+                        } else {
+                            document.getElementById('match-feedback').innerText = "¡Excelente! Has completado todos los bloques.";
+                        }
+                    }
+                } else {
+                    document.getElementById('match-feedback').innerText = "No coincide. Intenta de nuevo.";
+                    document.getElementById('match-feedback').className = "feedback-msg incorrect";
+                    setTimeout(() => {
+                        if (selectedVerb) selectedVerb.classList.remove('selected');
+                        if (selectedComp) selectedComp.classList.remove('selected');
+                        selectedVerb = null;
+                        selectedComp = null;
+                    }, 800);
+                }
+            }
+        }
+
+        function nextMatchBlock() {
+            if (currentBlockIndex < matchBlocks.length - 1) {
+                currentBlockIndex++;
+                loadMatchBlock();
+            }
+        }
+
+        function prevMatchBlock() {
+            if (currentBlockIndex > 0) {
+                currentBlockIndex--;
+                loadMatchBlock();
+            }
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.main-card').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+
+            document.getElementById(tabId).classList.add('active');
+            
+            if (tabId === 'flashcards') {
+                document.getElementById('btn-tab-fc').classList.add('active');
+            } else if (tabId === 'quiz') {
+                document.getElementById('btn-tab-qz').classList.add('active');
+                if (userAnswers.every(a => a === null) && score === 0) loadQuiz();
+            } else if (tabId === 'match') {
+                document.getElementById('btn-tab-mt').classList.add('active');
+                initMatchActivity();
+            }
+        }
+
+        updateCard();
+        prepareMatchBlocks();
+    </script>
+</body>
+</html>
